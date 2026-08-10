@@ -32,6 +32,12 @@ A REST API for managing student records using FastAPI and PostgreSQL.
 | PUT | `/students/{roll_no}` | Update a student |
 | DELETE | `/students/{roll_no}` | Delete a student |
 
+## API Documentation
+
+The API includes automatically generated interactive documentation using FastAPI's Swagger UI.
+
+![FastAPI Swagger UI](docs/swagger.png)
+
 ## Student Data
 
 Each student record contains:
@@ -47,10 +53,37 @@ The project uses PostgreSQL to store student records.
 
 Create a PostgreSQL database and configure the connection in the application before running the API.
 
-## Installation
+
+## How to Run
 
 ### 1. Clone the repository
 
 ```bash
 git clone https://github.com/krish373/FastAPI-Student-Management.git
 cd FastAPI-Student-Management
+
+python -m venv .venv
+MacOS/Linux-
+source .venv/bin/activate
+Windows-
+.venv\Scripts\activate
+
+pip install -r requirements.txt
+
+Create a .env file:
+
+DB_HOST=localhost
+DB_NAME=student_api
+DB_USER=your_username
+DB_PORT=5432
+DB_PASSWORD=your_password
+
+uvicorn main:app --reload
+
+The API will be available at:
+
+http://127.0.0.1:8000
+
+Interactive API documentation:
+
+http://127.0.0.1:8000/docs

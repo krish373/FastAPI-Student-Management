@@ -3,12 +3,16 @@ from pydantic import BaseModel
 from fastapi import HTTPException
 import psycopg
 from psycopg.rows import dict_row
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 conn = psycopg.connect(
-    host="localhost",
-    dbname="student_api",
-    user="krisharora",
-    port=5432,
+    host=os.getenv("DB_HOST"),
+    dbname=os.getenv("DB_NAME"),
+    user=os.getenv("DB_USER"),
+    port=os.getenv("DB_PORT"),
     row_factory=dict_row
 )
 

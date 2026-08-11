@@ -18,8 +18,6 @@ conn = psycopg.connect(
 
 app = FastAPI()
 
-students = []
-
 class Student(BaseModel):
     name: str
     age: int
@@ -28,28 +26,38 @@ class Student(BaseModel):
 
 @app.get("/")
 def home():
-    return {"message": "Hello!"}
+    return {
+    "message": "Student Management API",
+    "status": "running"
+}
 
-@app.get("/about")
-def about_profile():
-    return {"name": "Krish", "role": "AI Engineer"}
 
-@app.get("/skills")
-def acquired_skills():
-    return {"Skills": ["python","frontend", "backend", "AI"]}
+@app.get("/students") 
+def get_students():
+    result = conn.execute(
+        "SELECT * FROM student;"
+    )
 
-@app.get("/projects")
-def major_projects():
-    return {"Projects": ["Resume Analyzer with AI", "Weather app"]}
+    return result.fetchall()
 
-@app.get("/contact")
-def contact_details():
-    return{"email": "xyz@gmail.com", "phone no.": "1234567890"}
-
-@app.get("/square/{number}")
-def square(number: int):
-   
-    return{"number": number, "square": number * number }
+@app.get("/students/{roll_no}")
+def search_student(roll_no: int):
+    
+    result = conn.execute(
+        """ SELECT *
+            FROM student
+            WHERE roll_no = %s;""",
+            (roll_no,))
+    student = result.fetchone()
+    
+                              
+    if student is None:
+        raise HTTPException(
+        status_code = 404,
+        detail = "Student not found")
+        
+    return student
+    
 
 @app.post("/students", status_code = 201)
 def create_student(student: Student):
@@ -79,13 +87,6 @@ def create_student(student: Student):
         status_code = 409,
         detail = "Student already exists!")
 
-@app.get("/students") 
-def get_students():
-    result = conn.execute(
-        "SELECT * FROM student;"
-    )
-
-    return result.fetchall()
 
 @app.put("/students/{roll_no}")
 def update_student(roll_no: int, student: Student):
@@ -164,28 +165,4 @@ def delete_student(roll_no: int):
                 status_code=500,
                 detail="Internal server error"
             )
-        
-        
-    
-       
-    
 
-   
-@app.get("/students/{roll_no}")
-def search_student(roll_no: int):
-    
-    result = conn.execute(
-        """ SELECT *
-            FROM student
-            WHERE roll_no = %s;""",
-            (roll_no,))
-    student = result.fetchone()
-    
-                              
-    if student is None:
-        raise HTTPException(
-        status_code = 404,
-        detail = "Student not found")
-        
-    return student
-    

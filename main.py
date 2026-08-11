@@ -9,10 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 conn = psycopg.connect(
-    host=os.getenv("DB_HOST"),
-    dbname=os.getenv("DB_NAME"),
-    user=os.getenv("DB_USER"),
-    port=os.getenv("DB_PORT"),
+    conninfo=os.getenv("DATABASE_URL"),
     row_factory=dict_row
 )
 
